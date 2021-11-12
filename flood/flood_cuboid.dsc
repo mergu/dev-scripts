@@ -80,11 +80,9 @@ flood_cuboid:
   - define waterlogs <server.flag[flood_sets.<[name]>.waterlogs]>
   # Assume 0 level when flooding for first time
   - define level <server.flag[flood_sets.<[name]>.level].if_null[0]>
-
-  - if <[y]> == max:
-    - define y <[slices].size>
-
-  - define diff <[y].sub[<[level]>]>
+  # Adjusted level - corrects y input
+  - define adj <[y].min[<[slices].size>].if_null[<[slices].size>]>
+  - define diff <[adj].sub[<[level]>]>
   # We need to repeat for the difference no matter negative/positive
   - repeat <[diff].abs> as:l:
     # Determine if down or up, then find level
@@ -99,4 +97,4 @@ flood_cuboid:
     - wait <[interval]>
     - repeat next
   # For the next flood, set the level flag
-  - flag server flood_sets.<[name]>.level:<[y]>
+  - flag server flood_sets.<[name]>.level:<[adj]>
