@@ -1,8 +1,13 @@
-gen_y_slice:
-  type: procedure
-  definitions: blocks|y
-  script:
-  - determine <[blocks].filter_tag[<[filter_value].y.equals[<[y]>]>]>
+#| Flood Cuboid Scripts
+#| @author acikek
+#| @date Nov 12 2021
+#|
+#| Eases the process of flooding a cuboid with complex geometry. Raising and lowering
+#| water is also animated. Requires the Cuboid Selector Tool. Comes with a "Flooder" item
+#| (@see flooder.dsc) for easy set-up.
+#|
+#| After a flood set has been generated, use the `flood_cuboid` task to set the water level.
+#| - run flood_cuboid def:<name>|(<level>/max)|<interval>
 
 gen_flood_slice_list:
   type: task
@@ -29,7 +34,7 @@ gen_flood_slice_list:
     # Main slices - already accounts for y
     - define slices:->:<[flood]>
     # Waterlog slices
-    - define wslice <[wlogs].proc[gen_y_slice].context[<[y]>]>
+    - define wslice <[wlogs].filter_tag[<[filter_value].y.equals[<[y]>]>]>
     - define wlog_slices:->:<[wslice]>
     - define wlogs <[wlogs].exclude[<[wslice]>]>
 
@@ -75,7 +80,9 @@ flood_cuboid:
   - define waterlogs <server.flag[flood_sets.<[name]>.waterlogs]>
   # Assume 0 level when flooding for first time
   - define level <server.flag[flood_sets.<[name]>.level].if_null[0]>
-  - define diff <[y].sub[<[level]>]>
+  # Adjusted level - corrects y input
+  - define adj <[y].min[<[slices].size>].if_null[<[slices].size>]>
+  - define diff <[adj].sub[<[level]>]>
   # We need to repeat for the difference no matter negative/positive
   - repeat <[diff].abs> as:l:
     # Determine if down or up, then find level
@@ -90,4 +97,4 @@ flood_cuboid:
     - wait <[interval]>
     - repeat next
   # For the next flood, set the level flag
-  - flag server flood_sets.<[name]>.level:<[y]>
+  - flag server flood_sets.<[name]>.level:<[adj]>
