@@ -8,9 +8,6 @@ gen_flood_slice_list:
   type: task
   definitions: name|c|l
   script:
-  # Take the flood fill
-  - narrate "<gray>Taking flood fill..."
-  - define flood <[l].flood_fill[<[c]>]>
   # Blocks in the cuboid that support waterlogs
   - narrate "<gray>Finding waterloggables..."
   - define wlogs <[c].blocks.filter_tag[<[filter_value].material.supports[waterlogged]>]>
@@ -19,12 +16,18 @@ gen_flood_slice_list:
   - define slices <list>
   - define wlog_slices <list>
   # Repeat for the height of the cuboid + 1, from the bottom y
+  - define lcount 0
   - repeat <[c].max.y.sub[<[c].min.y>].add[1]> from:<[c].min.y> as:y:
+    # Cuboid at y slice (for big structures)
+    - define cuboid <[c].with_min[<[c].min.with_y[<[y]>]>].with_max[<[c].max.with_y[<[y]>]>]>
+    # Take the flood fill at this cuboid level
+    - narrate "<gray>Taking flood fill..."
+    - define flood <[l].with_y[<[l].y.add[<[lcount]>]>].flood_fill[<[cuboid]>]>
+    - define lcount:+:1
+
     - narrate "<gray>Generating at Y<&co><[y]>..."
-    # Main slices
-    - define slice <[flood].proc[gen_y_slice].context[<[y]>]>
-    - define slices:->:<[slice]>
-    - define flood <[flood].exclude[<[slice]>]>
+    # Main slices - already accounts for y
+    - define slices:->:<[flood]>
     # Waterlog slices
     - define wslice <[wlogs].proc[gen_y_slice].context[<[y]>]>
     - define wlog_slices:->:<[wslice]>
@@ -39,8 +42,8 @@ debug_flood_slices:
   script:
   - define slices <server.flag[flood_sets.<[name]>.slices]>
   - foreach <[slices]> as:slice:
-    - debugblock <[slice]> d:5s
-    - wait 1s
+    - debugblock <[slice]> d:40t
+    - wait 10t
 
 flood_cuboid_level:
   type: task
