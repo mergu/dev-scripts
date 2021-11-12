@@ -18,6 +18,9 @@ ice_melt:
       - playsound <context.location> sound:block_lava_extinguish volume:2 pitch:<util.random.decimal[1.6].to[1.9]>
       - playeffect effect:cloud at:<[blocks]> quantity:<util.random.int[1].to[5]> velocity:0.2,0.5,0.2 visibility:100
       - wait 3t
+    # Stop ice from melting via light
+    on *ice fades in:area_flagged:ice_melt:
+    - determine cancelled
 
 ice_restore:
   type: task
