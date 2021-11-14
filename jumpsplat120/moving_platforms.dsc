@@ -60,9 +60,9 @@ make_path:
     debug: false
     definitions: start|end|time|flag_name
     script:
-        - define x_delta <[start].x.sub[<[end].x>]>
-        - define y_delta <[start].y.sub[<[end].y>]>
-        - define z_delta <[start].z.sub[<[end].z>]>
+        - define x_delta <[end].x.sub[<[start].x>]>
+        - define y_delta <[end].y.sub[<[start].y>]>
+        - define z_delta <[end].z.sub[<[start].z>]>
         - repeat <[time]>:
             - define path:->:<[start].add[<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[x_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[y_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[z_delta]>]>]>
         - define path:|:<[path].reverse>
