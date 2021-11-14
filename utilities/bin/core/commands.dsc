@@ -431,8 +431,8 @@ end_queues:
                 - if <context.args.size> == 0:
                     - define warn <script[lib_config].parsed_key[color.warning]>
                     - define soft <script[lib_config].parsed_key[color.soft_server_notice]>
-                    - if <queue.list.size> > 1:
-                        - foreach <queue.list.exclude[<queue>]> as:queue:
+                    - if <util.queue.size> > 1:
+                        - foreach <util.queues.exclude[<queue>]> as:queue:
                             - narrate "<[warn]>Ending queue <[soft]><[queue].id>..."
                             - queue stop <[queue]>
                     - else:
