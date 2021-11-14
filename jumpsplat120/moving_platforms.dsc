@@ -26,29 +26,49 @@ moving_platform:
         - while <server.flag[platforms.<[server_flag]>].exists>:
             #foreach location in the path def...
             - foreach <[path]> as:new_pos:
-                #Check every tick if the loop needs to stop...
-                - foreach stop if:<server.flag[platforms.<[server_flag]>].is_truthy.not>
-                #Get the movement vector from the old_position and new_position
-                - define direction <[new_pos].sub[<[old_pos]>]>
-                - define old_pos <[new_pos]>
-                #For all the stands...
-                - foreach <[stands]> as:stand:
-                    #Get any player standing on top, and teleport the stand in the direction vector calculated from the path
-                    - define players:|:<[stand].location.proc[lib_center_on_head].up.find.players.within[1.5]>
-                    - teleport <[stand]> <[stand].location.add[<[direction]>]>
-                #For all players found standing on the platform...
-                - foreach <[players].deduplicate> as:player:
-                    #If the platform is moving up at all, teleport the player, otherwise you can just adjust their velocity
-                    #to keep them on the platform.
-                    - if <[direction].y> > 0:
-                        - teleport <[player]> <[player].location.add[<[direction]>]>
-                    - else:
-                        - adjust <[player]> velocity:<[player].velocity.add[<[direction].mul[0.45]>]>
-                - define players:!
-                - wait 1t
+                #Stop loop if we are resetting to origin, or if the flag no longer exists...
+                - if <server.flag[platforms.<[server_flag]>.reset]> || !<server.flag[platforms.<[server_flag]>].exists>:
+                    # If we are resetting rather than cleaning up, we are getting the reset_path, which is a subset of the
+                    # regular path. A regular path includes both forward and backwards, so we check to see if we are over the
+                    # halfway mark, and if we are, subtrack half the size of the path. Because basically, if our path was 10 long,
+                    # point 2 and point 7 will either be the same point, or the two points next to each other. And we don't
+                    # want, when we're reversing, to first move away from the origin. So no matter where in the cycle we are,
+                    # this should get the path that goes straight back to the origin.
+                    - define reset_path <[path].get[1].to[<[loop_index].is_more_than[<[path].size.mul[0.5]>].if_true[<[loop_index].sub[<[path].size.mul[0.5]>]>].if_false[<[loop_index]>]>].reverse>
+                    - foreach stop
+                - inject moving_platform path:move_platform
+            # If we are resetting, we travel the reset path. We don't need to check if we are resetting during the reset path.
+            # in practice this means even if we are only resetting for a tick, we have to go all the way back to the origin
+            # before we start moving again.
+            - if <server.flag[platforms.<[server_flag]>.reset]>:
+                - foreach <[reset_path]> as:new_pos:
+                    #Stop loop if we if the flag no longer exists...
+                    - foreach stop if:<server.flag[platforms.<[server_flag]>].exists.not>
+                    - inject moving_platform path:move_platform
         #When the while loop finishes, remove all entities forming the platform. This task should run when needed, and finish
         #when not, for example, spawn the platforms in when a player is in the dungeon, and despawned when they are not.
         - remove <[blocks]>
+    move_platform:
+        #Stop the platform if moving is false...
+        - waituntil <server.flag[platforms.<[server_flag]>.moving]>
+        #Get the movement vector from the old_position and new_position
+        - define direction <[new_pos].sub[<[old_pos]>]>
+        - define old_pos <[new_pos]>
+        #For all the stands...
+        - foreach <[stands]> as:stand:
+            #Get any player standing on top, and teleport the stand in the direction vector calculated from the path
+            - define players:|:<[stand].location.proc[lib_center_on_head].up.find.players.within[1]>
+            - teleport <[stand]> <[stand].location.add[<[direction]>]>
+        #For all players found standing on the platform...
+        - foreach <[players].deduplicate> as:player:
+            #If the platform is moving up at all, teleport the player, otherwise you can just adjust their velocity
+            #to keep them on the platform.
+            - if <[direction].y> > 0:
+                - teleport <[player]> <[player].location.add[<[direction]>]>
+            - else:
+                - adjust <[player]> velocity:<[player].velocity.add[<[direction].mul[0.45]>]>
+        - define players:!
+        - wait 1t
 
 # make a path. Uses cubic in-out easing.
 # start: A location where the path starts
