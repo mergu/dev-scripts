@@ -91,8 +91,8 @@ region_handler:
 
     # ! bad pressure plates would just be easily defined by flagging them via `/ex flag <player.cursor_on> bad_pressure_plate`
     after player stands on *_pressure_plate:
-      - if <context.location.has_flag[bad_pressure_plate]>
-      - run fancy_painful_teleport defmap:teleport=region_six_teleport_respawn
+      - if <context.location.has_flag[bad_pressure_plate]>:
+        - run fancy_painful_teleport defmap:teleport=region_six_teleport_respawn
 
 # @ #14 I need this door to open when the player has finished the puzzle
     after player enters region_eight_name:
