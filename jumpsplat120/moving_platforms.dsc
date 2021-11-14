@@ -49,8 +49,9 @@ moving_platform:
         #when not, for example, spawn the platforms in when a player is in the dungeon, and despawned when they are not.
         - remove <[blocks]>
     move_platform:
-        #Stop the platform if moving is false...
-        - waituntil <server.flag[platforms.<[server_flag]>.moving]>
+        # Stop the platform if moving is false. We also stop waiting if the flag dissapears, which means it will still clean
+        # up even if we are paused.
+        - waituntil <server.flag[platforms.<[server_flag]>.moving].or[<server.flag[platforms.<[server_flag]>].exists.not>]>
         #Get the movement vector from the old_position and new_position
         - define direction <[new_pos].sub[<[old_pos]>]>
         - define old_pos <[new_pos]>
@@ -70,7 +71,9 @@ moving_platform:
         - define players:!
         - wait 1t
 
-# make a path. Uses cubic in-out easing.
+# make a path
+# ease: Ease type (sine, quad, cubic, quart, quint, exp, circ, back, elastic, bounce)
+# direction: ease direction (in, out, inout)
 # start: A location where the path starts
 # end: The location where the path ends
 # time: Time in ticks, it should take to get from point A to point B
@@ -78,12 +81,14 @@ moving_platform:
 make_path:
     type: task
     debug: false
-    definitions: start|end|time|flag_name
+    definitions: ease|direction|start|end|time|flag_name
     script:
+        - define start <[start].add[-0.01,-1.25,0.01]>
+        - define end   <[end].add[-0.01,-1.25,0.01]>
         - define x_delta <[end].x.sub[<[start].x>]>
         - define y_delta <[end].y.sub[<[start].y>]>
         - define z_delta <[end].z.sub[<[start].z>]>
         - repeat <[time]>:
-            - define path:->:<[start].add[<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[x_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[y_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[cubic|inout|0|<[z_delta]>]>]>
+            - define path:->:<[start].add[<[value].div[<[time].add[1]>].proc[lib_ease].context[<[ease]>|<[direction]>|0|<[x_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[<[ease]>|<[direction]>|0|<[y_delta]>]>,<[value].div[<[time].add[1]>].proc[lib_ease].context[<[ease]>|<[direction]>|0|<[z_delta]>]>]>
         - define path:|:<[path].reverse>
         - flag server path.<[flag_name]>:<[path]>

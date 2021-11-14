@@ -1,5 +1,6 @@
 lib_entity_stand:
     type: entity
+    debug: false
     entity_type: armor_stand
     mechanisms:
         visible: false
@@ -9,6 +10,7 @@ lib_entity_stand:
 
 lib_entity_shulker:
     type: entity
+    debug: false
     entity_type: shulker
     mechanisms:
         potion_effects: INVISIBILITY,0,<util.int_max>,false,false,false
