@@ -454,7 +454,7 @@ denchant:
         - determine <proc[lib_has_permission].context[utilities.denchant|<player.if_null[null]>].if_null[false]>
     tab completions:
         1: <server.enchantments.parse[name]>
-        2: <proc[lib_numeric_list].context[<server.enchantment_start_level[<context.args.first>]>|<server.enchantment_max_level[<context.args.first>]>]>
+        2: <proc[lib_numeric_list].context[<enchantment[<context.args.first>].min_level>|<enchantment[<context.args.first>].max_level>]>
     script:
         - if <proc[lib_has_permission].context[utilities.denchant|<player.if_null[server_or_command_block]>].if_null[true]>:
             - if <player.exists>:
