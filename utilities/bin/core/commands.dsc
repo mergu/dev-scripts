@@ -1,6 +1,4 @@
 ##IgnoreWarning command_script_usage
-##IgnoreWarning tag_trace_failure
-##IgnoreWarning bad_tag_part
 
 #Angry about me using procs for usage, because it doesn't start with a forward slash
 #tag trace and tag part errors are about the enchantment stuff, which was tweaked
@@ -431,7 +429,7 @@ end_queues:
                 - if <context.args.size> == 0:
                     - define warn <script[lib_config].parsed_key[color.warning]>
                     - define soft <script[lib_config].parsed_key[color.soft_server_notice]>
-                    - if <util.queue.size> > 1:
+                    - if <util.queues.size> > 1:
                         - foreach <util.queues.exclude[<queue>]> as:queue:
                             - narrate "<[warn]>Ending queue <[soft]><[queue].id>..."
                             - queue stop <[queue]>
@@ -483,7 +481,7 @@ denchant:
                                 - narrate "<[colors].get[success]>You successfully enchanted a <[soft]><[item].material.translated_name><[colors].get[success]> with <[colors].get[important]><[enchantment].full_name[<[level]>]>"
                                 - foreach <[item_enchants]>:
                                     - define ench <enchantment[<[key]>]>
-                                    - define conflicts:->:<[ench].full_name> if:<[enchantment].is_compatible[<[ench]>].not>
+                                    - define conflicts:->:<[ench].full_name[<[level]>]> if:<[enchantment].is_compatible[<[ench]>].not>
                                 - foreach <[conflicts].if_null[<list>]>:
                                     - define conflict_str "<[conflict_str].if_null[]><[loop_index].equals[1].if_true[].if_false[<[loop_index].equals[<[conflicts].size>].if_true[ and ].if_false[, ]>]><[value]>"
                                 - narrate "<[warn]>The level you enchanted at is outside the range normally obtainable in vanilla." if:<[enchantment].min_level.is_more_than[<[level]>].or[<[level].is_more_than[<[enchantment].max_level>]>]>
