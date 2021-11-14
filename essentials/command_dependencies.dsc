@@ -61,7 +61,7 @@ player_verification:
   script:
     - if <[user].length> < 3:
       - inject player_verification.too_short
-    - else if <server.match_player[<[user]>].if_null[invalid]> == invalid:
+    - else if !<server.match_player[<[user]>].exists>:
       - inject player_verification.invalid_player
     - define user <server.match_player[<[user]>]>
 
@@ -87,8 +87,8 @@ player_verification_offline:
   script:
   - if <[user].length> < 3:
     - inject player_verification_offline.too_short
-  - else if <server.match_player[<[user]>].if_null[invalid]> == invalid:
-    - if <server.match_offline_player[<[user]>].if_null[invalid]> == invalid:
+  - else if !<server.match_player[<[user]>].exists>:
+    - if !<server.match_offline_player[<[user]>].exists>:
       - inject player_verification_offline.invalid_player
     - else:
       - define user <server.match_offline_player[<[user]>]>

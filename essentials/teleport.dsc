@@ -25,11 +25,11 @@ teleport_command:
         - determine ~
 
     - else if <[arg_count]> == 3:
-      - if !<context.args.remove[first].exclude[~|~|~].parse[is_integer].contains[false]> || <server.match_player[<context.args.first>].if_null[invalid]> == invalid:
+      - if !<context.args.remove[first].exclude[~|~|~].parse[is_integer].contains[false]> || !<server.match_player[<context.args.first>].exists>:
         - determine ~
 
     - else if <[arg_count]> == 4:
-      - if <server.match_player[<context.args.first>].if_null[invalid]> == invalid:
+      - if !<server.match_player[<context.args.first>].exists>:
         - if !<context.args.get[1].to[3].exclude[~|~|~].parse[is_integer].contains[false]>:
           - determine <server.worlds.parse[name].filter[starts_with[<context.args.get[4].if_null[<empty>]>]]>
       - else if !<context.args.remove[first].exclude[~|~].parse[is_integer].contains[false]>:
@@ -84,7 +84,7 @@ teleport_command:
       # | ██  [  /teleport PlayerTwo            ] ██
       # | ██  [  /teleport world                ] ██
       - case 1:
-        - if <server.match_player[<context.args.first>].if_null[invalid]> == invalid:
+        - if !<server.match_player[<context.args.first>].exists>:
           - if !<server.worlds.parse[name].contains[<context.args.first>]>:
             - define reason "Invalid player or world name."
             - inject command_error
