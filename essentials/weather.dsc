@@ -7,7 +7,7 @@ weather_command:
   permission: behr.essentials.weather
   tab completions:
     1: sunny|storm|thunder|rainy
-    2: <server.worlds.parse[name].filter[name.contains_any_text[nether|end].not]>
+    2: <server.worlds.parse[name].filter[contains_any_text[nether|end].not]>
   script:
   # % ██  [ Check player arguments              ]  ██
     - if <context.args.is_empty> || <context.args.size> > 2:
@@ -25,7 +25,7 @@ weather_command:
   # % ██  [ Check if a player specified a world ]  ██
     - if <context.args.size> == 2:
       - define world <context.args.last>
-      - if !<Server.worlds.parse[name].contains[<[world]>]>:
+      - if !<server.worlds.parse[name].contains[<[world]>]>:
         - define reason "Invalid world"
         - inject command_error
 
