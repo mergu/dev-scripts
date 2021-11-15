@@ -10,14 +10,14 @@
 # % ██  | for themselves what they typed wrongly
 # - ██  [ Usage ] - inject command_syntax
 command_syntax:
-    type: task
-    debug: false
-    script:
-        - define command "<queue.script.data_key[aliases].first.if_null[<queue.script.data_key[name]>]> "
-        - define hover "<&color[#33ff33]>Click to Insert:<n><queue.script.parsed_key[usage].proc[colorize]>"
-        - define text "<proc[colorize].context[Syntax: <queue.script.parsed_key[usage]>]>"
-        - narrate <proc[msg_hint].context[<[hover]>|<[text]>|<[command]>]>
-        - stop
+  type: task
+  debug: false
+  script:
+    - define command "<queue.script.data_key[aliases].first.if_null[<queue.script.data_key[name]>]> "
+    - define hover "<&color[#33ff33]>Click to Insert:<n><queue.script.parsed_key[usage].proc[colorize]>"
+    - define text "<proc[colorize].context[Syntax: <queue.script.parsed_key[usage]>]>"
+    - narrate <proc[msg_hint].context[<[hover]>|<[text]>|<[command]>]>
+    - stop
 
 # % ██  @ command general error & stop
 # % ██  | injects an error message telling the player they used
@@ -29,15 +29,15 @@ command_syntax:
 # - ██  [ Usage ] - define reason "This is an error because of this reason"
 # - ██  [       ] - inject command_error
 command_error:
-    type: task
-    debug: false
-    definitions: reason
-    script:
-        - define command "<queue.script.data_key[aliases].first.if_null[<context.alias.if_null[<context.command>]>]> "
-        - define hover "<&color[#ff3333]>You typed<&r><n><&4>/<&color[#ff3333]><context.alias.if_null[<context.command>]> <context.raw_args><n><&color[#33ff33]>Click to insert<&co><n><queue.script.parsed_key[usage].proc[colorize]>"
-        - define text <&color[#ff3333]><[reason]>
-        - narrate <proc[msg_hint].context[<[hover]>|<[text]>|<[command]>]>
-        - stop
+  type: task
+  debug: false
+  definitions: reason
+  script:
+    - define command "<queue.script.data_key[aliases].first.if_null[<context.alias.if_null[<context.command>]>]> "
+    - define hover "<&color[#ff3333]>You typed<&r><n><&4>/<&color[#ff3333]><context.alias.if_null[<context.command>]> <context.raw_args><n><&color[#33ff33]>Click to insert<&co><n><queue.script.parsed_key[usage].proc[colorize]>"
+    - define text <&color[#ff3333]><[reason]>
+    - narrate <proc[msg_hint].context[<[hover]>|<[text]>|<[command]>]>
+    - stop
 
 # % ██  @ checks if a player name could be a valid player
 # % ██  | injects an error message telling the player they
