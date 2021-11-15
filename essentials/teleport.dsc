@@ -103,13 +103,10 @@ teleport_command:
       - if <[invalid_coordinates].exists>:
         # % ██  [  > 1 invalid coordinates == "<coordinates> are invalid coordinates"  ] ██
         - if <[invalid_coordinates].size> > 1:
-          - define grammar_verb are
-          - define grammar_noun coordinates
+          - define reason "<[invalid_coordinates].formatted> are invalid coordinates"
         # % ██  [  < 1 invalid coordinates == "<coordinate> is an invalid coordinate"  ] ██
         - else:
-          - define grammar_verb "is an"
-          - define grammar_noun coordinate
-        - define reason "<[invalid_coordinates].formatted> <[grammar_verb]> invalid <[grammar_noun]>."
+          - define reason "<[invalid_coordinates].formatted> is an invalid coordinate"
         - inject command_error
 
       - foreach <[coordinates]> as:coordinate:
