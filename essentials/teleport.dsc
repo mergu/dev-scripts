@@ -1,3 +1,15 @@
+teleport_help:
+  type: data
+  help:
+    - x y z <&b>| <&a>Teleports you to the coordinates <&2><&lt><&a>x y z<&2><&gt>
+    - x y z world <&b>| <&a>Teleports you to <&2><&lt><&a>x y z<&2><&gt><&a> on the named world
+    - world <&b>| <&a>Teleports you to the named world
+    - PlayerTwo <&b>| <&a>Teleports you to PlayerTwo
+    - PlayerOne x y z <&b>| <&a>Teleports PlayerOne to <&2><&lt><&a>x y z<&2><&gt>
+    - PlayerOne x y z world <&b>| <&a>Teleports PlayerOne to <&2><&lt><&a>x y z<&2><&gt><&a> on the named world
+    - PlayerOne world <&b>| <&a>Teleports PlayerOne to the named world
+    - PlayerOne PlayerTwo <&b>| <&a>Teleports PlayerOne to PlayerTwo
+
 teleport_command:
   type: command
   name: teleport
@@ -73,14 +85,8 @@ teleport_command:
       - determine <server.worlds.parse[name].filter[starts_with[<context.args.get[5].if_null[<empty>]>]]>
 
   help:
-    - narrate "<&6>/<&e>teleport x y z <&b>| <&a>Teleports you to the coordinates <&2><&lt><&a>x y z<&2><&gt>"
-    - narrate "<&6>/<&e>teleport x y z world <&b>| <&a>Teleports you to <&2><&lt><&a>x y z<&2><&gt><&a> on the named world"
-    - narrate "<&6>/<&e>teleport world <&b>| <&a>Teleports you to the named world"
-    - narrate "<&6>/<&e>teleport PlayerTwo <&b>| <&a>Teleports you to PlayerTwo"
-    - narrate "<&6>/<&e>teleport PlayerOne x y z <&b>| <&a>Teleports PlayerOne to <&2><&lt><&a>x y z<&2><&gt>"
-    - narrate "<&6>/<&e>teleport PlayerOne x y z world <&b>| <&a>Teleports PlayerOne to <&2><&lt><&a>x y z<&2><&gt><&a> on the named world"
-    - narrate "<&6>/<&e>teleport PlayerOne world <&b>| <&a>Teleports PlayerOne to the named world"
-    - narrate "<&6>/<&e>teleport PlayerOne PlayerTwo <&b>| <&a>Teleports PlayerOne to PlayerTwo"
+    - foreach <script[teleport_help].parsed_key[help]> as:line:
+      - narrate "<&6>/<&e>teleport <[line]>"
 
   check:
     coordinates:
