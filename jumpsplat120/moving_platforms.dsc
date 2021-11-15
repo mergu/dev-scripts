@@ -49,6 +49,8 @@ moving_platform:
         #when not, for example, spawn the platforms in when a player is in the dungeon, and despawned when they are not.
         - remove <[blocks]>
     move_platform:
+        #if the stands are no longer spawned it, remove the flag, and let cleanup happen naturally
+        - flag server platforms.<[server_flag]>:! if:<[stands].filter[is_spawned].size.equals[<[stands].size>].not>
         # Stop the platform if moving is false. We also stop waiting if the flag dissapears, which means it will still clean
         # up even if we are paused.
         - waituntil <server.flag[platforms.<[server_flag]>.moving].or[<server.flag[platforms.<[server_flag]>].exists.not>]>
