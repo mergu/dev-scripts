@@ -53,6 +53,7 @@ block_carrying_events:
 spawn_carryable_block:
     type: task
     definitions: material|location
+    debug: false
     script:
         - run lib_spawn_falling_block def:<[material]>|<[location].add[-0.01,-1.25,0.01]> save:block
         - define entities <entry[block].created_queue.determination.last>
