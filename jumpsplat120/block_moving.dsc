@@ -61,7 +61,7 @@ spawn_carryable_block:
         # Play particles at the blocks location. They stop when the entity despawns. Despawn all entities in the
         # area with a "carryable" flag for clean up.
         - while <[entities].first.is_spawned>:
-            - playeffect effect:wax_off at:<[entities].first.location.up[1.25]> quantity:15 offset:0.45,0.45,0.45
+            - playeffect effect:wax_off at:<[entities].first.location.up[1.25]> quantity:15 offset:0.45,0.45,0.45 visibility:64
             - repeat 10:
                 - wait 1t
                 - while stop if:<[entities].first.is_spawned.not>
