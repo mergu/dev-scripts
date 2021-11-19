@@ -123,22 +123,22 @@ region_handler:
 
 fancy_teleport:
   type: task
-  definitions: location
+  definitions: location_name
   script:
   # TODO: This title insertion / fade depends on: - resource pack data and structure
     - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:5t stay:0s fade_out:1s
     - wait 5t
-    - teleport <[location]>
+    - teleport <location[<[location_name]>]>
 
 fancy_painful_teleport:
   type: task
-  definitions: location
+  definitions: location_name
   script:
   # TODO: This title insertion / fade depends on: - resource pack data and structure
-    - animate <player> animation:hurt_drown
-    - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:2t stay:0s fade_out:1s
-    - wait 2t
-    - teleport <[location]>
+    - animate <player> animation:hurt
+    - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:3t stay:0s fade_out:1s
+    - wait 3t
+    - teleport <location[<[location_name]>]>
 
 vel:
   type: assignment
