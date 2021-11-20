@@ -7,6 +7,8 @@
 # center_on_head: Does what it says on the tin; returns a location where the armor stand is centered on the head. This returns the center of a block, so you will most likely need to adjust seperately after using this procedure.
 # block_face: Get's the face of a block that the passed entity is looking up, up to the range passed. If there is no passed entity, attempts to fallback to a linked player, and if there is no range, uses the default of 200.
 # block_facing: Get's the facing vector of the block at location.
+# surrounding_blocks: Helper function that gets all the blocks surrounding a location. Faster than using a .find function, since it's just doing some basic vector math. Does NOT return the location itself.
+# sort_by_distance_to: Sorts a list of location by their distance to another location.
 # rainbow_list: Returns a list of just colors. Similar to rainbow text, but doesn't need text, so you can use the colors however and have them be to your spec.
 # unstackable: Takes a passed item name, and returns an item with random nbt on it, so it doesn't stack with other items of the same type. Useful for creating non stacking items out of a material that normally stacks, when you don't want to adjust the material in it's entirety.
 # face_to_vector: Takes a face (up/down/north/south/east/west) and turns it into a vector (0,1,0/0,-1,0...)
@@ -46,8 +48,9 @@ lib_outline_cuboid:
         - define density <tern[<[density].if_null[true]>].pass[1].fail[<[density]>]>
         - if <[cuboid].list_members.size> == 1:
             - define density <element[1].div[<[density]>]>
-            - define max     <[cuboid].max_y.add[0.51,0.51,0.51]>
-            - define min     <[cuboid].min_y.sub[0.51,0.51,0.51]>
+            - define world   <[cuboid].center.world>
+            - define max     <[cuboid].max.center.add[.51,.51,.51,<[world]>]>
+            - define min     <[cuboid].min.center.sub[.51,.51,.51,<[world]>]>
             - define a       <[max].with_z[<[min].z>]>
             - define b       <[max].with_x[<[min].x>]>
             - define c       <[b].with_z[<[min].z>]>
@@ -114,6 +117,15 @@ lib_block_facing:
         - define entity <[entity].if_null[<player>]>
         - determine <[entity].eye_location.precise_impact_normal[<[distance].if_null[200]>]>
 
+lib_surrounding_blocks:
+    type: procedure
+    debug: false
+    definitions: location
+    script:
+        - foreach <list[1,0,0|0,1,0|0,0,1|-1,0,0|0,-1,0|0,0,-1]>:
+            - define result:->:<[location].add[<[value]>]>
+        - determine <[result]>
+
 lib_rainbow_list:
     type: procedure
     debug: false
@@ -125,6 +137,22 @@ lib_rainbow_list:
             - define color_list:->:<&color[<[color]>]>
             - define color <[color].with_hue[<[color].hue.add[15]>]>
         - determine <[color_list]>
+
+lib_sort_by_distance_to:
+    type: procedure
+    debug: false
+    definitions: list|location
+    script:
+        - define result <list>
+        - foreach <[list]> as:loc:
+            - define distance <[loc].distance[<[location]>]>
+            - define index 1
+            - foreach <[result]> as:compare_loc:
+                - if <[distance]> <= <[compare_loc].distance[<[location]>]>:
+                    - foreach stop
+                - define index:++
+            - define result <[result].insert[<[loc]>].at[<[index]>]>
+        - determine <[result]>
 
 lib_full_volume:
     type: procedure
