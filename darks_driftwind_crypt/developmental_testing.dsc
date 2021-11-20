@@ -3,7 +3,7 @@ region_handler:
   type: world
   events:
     after player enters region_one_name:
-      - run fancy_teleport defmap:teleport=room_two_name
+      - run fancy_teleport defmap:location_name=room_two_name
 
 # @ #2: Need a region set where players cannot edit pre-rotated swords
 # @ #3 Need a region set where players *can* rotate the un-rotated swords, but not remove them
@@ -34,7 +34,7 @@ region_handler:
 
 # @ #7 Need a transition to the long hallway to the left of this block.
     after player enters region_four_name:
-      - run fancy_teleport defmap:teleport=room_three_name
+      - run fancy_teleport defmap:location_name=room_three_name
 
 # @ #9 In this room, I need a handfull of fireballs that will pursue the player as long as they are inside of this room
     after player enters region_five_name:
@@ -70,7 +70,7 @@ region_handler:
 
 # @ #10 I also need a boundary that will force teleport the player up if they land on it on the "fog" below
     after player enters region_six_name:
-      - run fancy_painful_teleport defmap:teleport=fog_teleport_respawn
+      - run fancy_painful_teleport defmap:location_name=fog_teleport_respawn
 
 # @ 11 I need this door to open when a player is close to it
     after player enters region_seven_name:
@@ -92,7 +92,7 @@ region_handler:
     # ! bad pressure plates would just be easily defined by flagging them via `/ex flag <player.cursor_on> bad_pressure_plate`
     after player stands on *_pressure_plate:
       - if <context.location.has_flag[bad_pressure_plate]>:
-        - run fancy_painful_teleport defmap:teleport=region_six_teleport_respawn
+        - run fancy_painful_teleport defmap:location_name=region_six_teleport_respawn
 
 # @ #14 I need this door to open when the player has finished the puzzle
     after player enters region_eight_name:
@@ -100,7 +100,7 @@ region_handler:
 
 # @ #15 I need a transition to the large hallway to the left of this block
     after player enters region_nine_name:
-      - run fancy_teleport defmap:teleport=room_four_name
+      - run fancy_teleport defmap:location_name=room_four_name
 
 #17 Npc named "Vel", what he says is tbd, need him to vanish when he finishes talking as if he died
     # @ see below maybe
@@ -123,22 +123,22 @@ region_handler:
 
 fancy_teleport:
   type: task
-  definitions: location
+  definitions: location_name
   script:
   # TODO: This title insertion / fade depends on: - resource pack data and structure
     - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:5t stay:0s fade_out:1s
     - wait 5t
-    - teleport <[location]>
+    - teleport <[location_name]>
 
 fancy_painful_teleport:
   type: task
-  definitions: location
+  definitions: location_name
   script:
   # TODO: This title insertion / fade depends on: - resource pack data and structure
-    - animate <player> animation:hurt_drown
-    - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:2t stay:0s fade_out:1s
-    - wait 2t
-    - teleport <[location]>
+    - animate <player> animation:hurt
+    - title title:<&font[fade:black]><&chr[0004]><&chr[F801]><&chr[0004]> fade_in:3t stay:0s fade_out:1s
+    - wait 3t
+    - teleport <[location_name]>
 
 vel:
   type: assignment
