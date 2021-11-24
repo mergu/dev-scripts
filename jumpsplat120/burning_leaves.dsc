@@ -1,5 +1,6 @@
 burning_leaves:
     type: world
+    debug: false
     events:
         on player shoots *_leaves in:box:
             - define cuboid <cuboid[box]>
@@ -22,6 +23,6 @@ burning_leaves:
             - foreach <[leaves]>:
                 - run burning_leaves path:remove def.leaf_block:<[value]> def.air_block:<[value].add[<[value].sub[<[value].proc[lib_surrounding_blocks].filter[material.advanced_matches[air].not].first>]>]> delay:<util.random.int[<[loop_index].mul[4]>].to[<[loop_index].mul[8]>]>t
     remove:
-        - modifyblock <[air_block]> fire
-        - wait <util.random.int[5].to[15]>t
+        - modifyblock <[air_block]> fire[faces=<[leaf_block].sub[<[air_block]>].vector_to_face>]
+        - wait <util.random.int[10].to[15]>t
         - modifyblock <[leaf_block]> air
